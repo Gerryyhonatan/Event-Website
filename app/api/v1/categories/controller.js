@@ -1,58 +1,48 @@
 const Categories = require('./model');
+const { getAllCategories, createCategories, getOneCategories, updateCategories, deleteCategories} = require('../../../services/mongoose/categories');
+const { StatusCodes } = require('http-status-codes');
 
 const create = async (req, res, next) =>{
     try {
-      const { name } = req.body;  
-      const result = await Categories.create({name});
-      res.status(201).json({
+      const result = await createCategories(req);
+      res.status(StatusCodes.CREATED).json({
         data : result,
       });
-    } catch (error) {
+    } catch (err) {
         next(err);
     }
 };
 
 const index = async (req, res, next)=> {
     try {
-        const result = await Categories.find().select('_id name');
-        res.status(200).json({
+        const result = await getAllCategories();
+        res.status(StatusCodes.OK).json({
             data : result,
         });
-    } catch (error) {
+    } catch (err) {
         next(err);
     }
 };
 
 const find = async (req, res, next) => {
     try {
-        const {id} = req.params;
-        const result = await Categories.findOne({ _id : id});
+        
+        const result = await getOneCategories(req);
 
-        if(!result) {
-            return res.status(404).json({message : 'Id categories tidak ditemukan'});
-        }
-
-        res.status(200).json({
+        res.status(StatusCodes.OK).json({
             data : result,
         });
-    } catch (error) {
+    } catch (err) {
         next(err);
     }
 };
 
 const update = async (req, res, next) => {
     try {
-      const { id } = req.params;
-      const { name } = req.body;
-  
       // cari dan update categories berdasarkan field _id
-      const result = await Categories.findOneAndUpdate(
-        { _id: id },
-        { name },
-        { new: true, runValidators: true } // menampilkan data baru dan menjalankan validation
-      );
-  
-      res.status(200).json({
+      const result = await updateCategories(req);
+       
+      res.status(StatusCodes.OK).json({
         data: result,
       });
     } catch (err) {
@@ -62,10 +52,7 @@ const update = async (req, res, next) => {
 
   const destroy = async (req, res, next) => {
     try {
-      const { id } = req.params;
-      
-      // cari dan hapus categories berdasakan field _id
-      const result = await Categories.findByIdAndDelete(id);
+      const result = await deleteCategories(req);
       res.status(200).json({
         data: result,
       });
