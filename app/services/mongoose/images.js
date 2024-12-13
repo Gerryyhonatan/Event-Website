@@ -1,4 +1,5 @@
 const Images = require('../../api/v1/images/model');
+const { NotFoundError } = require('../../errors')
 
 const createImages = async (req) => {
   const result = await Images.create({
