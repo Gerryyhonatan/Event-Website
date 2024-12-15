@@ -1,4 +1,3 @@
-const { sign } = require('jsonwebtoken');
 const Users = require('../../api/v1/users/model');
 const { BadRequestError, UnautorizhedError } = require('../../errors');
 const { createJWT, createTokenUser } = require('../../utils');
