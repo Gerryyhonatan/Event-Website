@@ -3,6 +3,7 @@ const { isTokenValid } = require('../utils/jwt');
 
 const authenticateUser = async (req, res, next) => {
     try {
+        let token;
         const authHeader = req.headers.authorization;
 
         if(authHeader && authHeader.startsWith('Bearer')) {
