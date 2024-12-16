@@ -1,13 +1,16 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-const userSchema = new mongoose.Schema(
+const participantSchema = new mongoose.Schema(
   {
-    name: {
+    firstName: {
       type: String,
-      required: [true, 'Nama harus diisi'],
+      required: [true, 'Nama depan harus diisi'],
       minlength: 3,
       maxlength: 50,
+    },
+    lastName: {
+      type: String,
     },
     email: {
       type: String,
@@ -21,19 +24,22 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['admin', 'organizer', 'owner'],
-      default: 'admin',
+      default: '-',
     },
-    organizer: {
-      type: mongoose.Types.ObjectId,
-      ref: 'Organizer',
+    status: {
+      type: String,
+      enum: ['aktif', 'tidak aktif'],
+      default: 'tidak aktif',
+    },
+    otp: {
+      type: String,
       required: true,
     },
   },
   { timestamps: true }
 );
 
-userSchema.pre('save', async function (next) {
+participantSchema.pre('save', async function (next) {
   const User = this;
   if (User.isModified('password')) {
     User.password = await bcrypt.hash(User.password, 12);
@@ -41,9 +47,9 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-userSchema.methods.comparePassword = async function (canditatePassword) {
+participantSchema.methods.comparePassword = async function (canditatePassword) {
   const isMatch = await bcrypt.compare(canditatePassword, this.password);
   return isMatch;
 };
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('Participant', participantSchema);

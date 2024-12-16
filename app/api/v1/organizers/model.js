@@ -5,7 +5,7 @@ let organizersSchema = Schema(
   {
     organizer: {
       type: String,
-      required: [true, 'Penyelenggara harus diisi'],
+      required: [true, 'Peyelenggara harus diisi'],
     },
   },
   { timestamps: true }
